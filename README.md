@@ -1,0 +1,1 @@
+github contribution view for strava activities
