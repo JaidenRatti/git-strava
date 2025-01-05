@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import StravaProvider from "next-auth/providers/strava";
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
     StravaProvider({
       clientId: process.env.STRAVA_CLIENT_ID,
@@ -25,7 +25,6 @@ export const authOptions = {
       return session;
     },
   },
-};
+});
 
-const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
