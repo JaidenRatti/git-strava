@@ -58,7 +58,7 @@ export default function Home() {
   const fetchGithubContributions = async () => {
     try {
       const response = await axios.get(`/api/githubContributions?githubUsername=${githubUsername}`);
-      setGithubContributions(response.data);  // Set the data received from the API
+      setGithubContributions(response.data); 
     } catch (error) {
       console.error("Error fetching GitHub contributions", error);
     }
@@ -66,7 +66,6 @@ export default function Home() {
   
 
 
-  // Generate activity graph with correct date formatting
   const generateActivityGraph = (activities, githubContributions) => {
     const activityMap = {};
 
@@ -209,15 +208,15 @@ export default function Home() {
               display: "grid",
               gridTemplateColumns: "repeat(52, 20px)", // 52 columns for each week
               gridTemplateRows: "repeat(7, 20px)", // 7 rows for each day of the week
-              gridGap: "5px", // Space between squares
+              gridGap: "5px", 
               justifyContent: "center",
               margin: "0 auto",
               position: "relative",
             }}
           >
             {activityGraph.map(({ stravaCount, githubCount, date }, index) => {
-              const column = Math.floor(index / 7); // Determine the column based on index
-              const row = index % 7; // Determine the row (0 to 6, representing days of the week)
+              const column = Math.floor(index / 7);
+              const row = index % 7; 
 
               return (
                 <div
