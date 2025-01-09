@@ -1,1 +1,1 @@
-github contribution view for strava activities
+Github contribution style view for strava activities $\cup$ github commits.
