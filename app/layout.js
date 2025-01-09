@@ -4,8 +4,8 @@ import { Analytics } from "@vercel/analytics/react"
 
 
 export const metadata = {
-  title: "Strava Activity Graph",
-  description: "View your Strava activities in a GitHub-style contribution graph.",
+  title: "Strava x GitHub Activity Graph",
+  description: "GitHub contribution style view for Strava and Github activity",
 };
 
 export default function RootLayout({ children }) {
