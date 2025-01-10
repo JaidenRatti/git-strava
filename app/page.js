@@ -68,35 +68,60 @@ export default function Home() {
 
   const generateActivityGraph = (activities, githubContributions) => {
     const activityMap = {};
-
+  
+    // Populate activityMap with activity hours
     activities.forEach((activity) => {
       const date = new Date(activity.start_date).toISOString().split("T")[0];
       const hours = activity.moving_time / 3600;
       activityMap[date] = (activityMap[date] || 0) + hours;
     });
-
+  
+    // Initialize graphData
     const graphData = [];
     const endDate = new Date();
     const startDate = new Date();
     startDate.setFullYear(endDate.getFullYear() - 1);
-
+  
     let currentDate = new Date(startDate);
-
-    for (let i = 0; i < 364; i++) {
-      if (currentDate > endDate) break;
-
+  
+    // Ensure we cover each day for a full year (52 weeks + a few extra days)
+    while (currentDate <= endDate) {
       const dateString = currentDate.toISOString().split("T")[0];
       graphData.push({
         stravaCount: activityMap[dateString] || 0,
         githubCount: githubContributions[dateString] || 0,
         date: new Date(currentDate),
       });
-
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
     }
-
-    return graphData;
+  
+    // Group by weeks (Sunday as the first day of the week)
+    const weeks = [];
+    let week = [];
+    graphData.forEach((entry) => {
+      if (entry.date.getDay() === 0 && week.length > 0) {
+        weeks.push(week);
+        week = [];
+      }
+      week.push(entry);
+    });
+    if (week.length > 0) weeks.push(week); // Add the last week
+  
+    // Fill incomplete weeks at the start and end with placeholders
+    const firstWeek = weeks[0];
+    while (firstWeek.length < 7) {
+      firstWeek.unshift({ date: null, stravaCount: 0, githubCount: 0 });
+    }
+  
+    const lastWeek = weeks[weeks.length - 1];
+    while (lastWeek.length < 7) {
+      lastWeek.push({ date: null, stravaCount: 0, githubCount: 0 });
+    }
+  
+    // Flatten the weeks array for rendering
+    return weeks.flat();
   };
+  
 
   const getColor = (stravaCount, githubCount) => {
     if (stravaCount === 0 && githubCount === 0) return "#ebedf0"; // GitHub light gray
@@ -214,36 +239,39 @@ export default function Home() {
               position: "relative",
             }}
           >
-            {activityGraph.map(({ stravaCount, githubCount, date }, index) => {
-              const column = Math.floor(index / 7);
-              const row = index % 7; 
+           {activityGraph.map(({ stravaCount, githubCount, date }, index) => {
+  const weekIndex = Math.floor(index / 7); // Current week index
+  const dayOfWeek = index % 7; // Current day within the week (Sunday = 0)
 
-              return (
-                <div
-                  key={index}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    background: getColor(stravaCount, githubCount),
-                    borderRadius: "3px",
-                    cursor: "pointer",
-                    gridColumnStart: column + 1, // Start at the correct column
-                    gridRowStart: row + 1, // Start at the correct row
-                  }}
-                  onMouseEnter={(e) =>
-                    setTooltip({
-                      visible: true,
-                      day: date ? date.toDateString() : "No data",
-                      stravaHours: stravaCount,
-                      githubContributions: githubCount,
-                      x: e.clientX,
-                      y: e.clientY,
-                    })
-                  }
-                  onMouseLeave={() => setTooltip({ visible: false })}
-                />
-              );
-            })}
+  return (
+    <div
+      key={index}
+      style={{
+        width: "20px",
+        height: "20px",
+        background: date ? getColor(stravaCount, githubCount) : "#ebedf0", // Light gray for placeholders
+        borderRadius: "3px",
+        cursor: date ? "pointer" : "default",
+        gridColumnStart: weekIndex + 1,
+        gridRowStart: dayOfWeek + 1,
+      }}
+      onMouseEnter={(e) =>
+        date &&
+        setTooltip({
+          visible: true,
+          day: date.toDateString(),
+          stravaHours: stravaCount,
+          githubContributions: githubCount,
+          x: e.clientX,
+          y: e.clientY,
+        })
+      }
+      onMouseLeave={() => setTooltip({ visible: false })}
+    />
+  );
+})}
+
+
           </div>
 
           <div
