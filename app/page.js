@@ -228,51 +228,55 @@ export default function Home() {
           >
             Fetch GitHub Contributions
           </button>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(52, 20px)", // 52 columns for each week
-              gridTemplateRows: "repeat(7, 20px)", // 7 rows for each day of the week
-              gridGap: "5px", 
-              justifyContent: "center",
-              margin: "0 auto",
-              position: "relative",
-            }}
-          >
-           {activityGraph.map(({ stravaCount, githubCount, date }, index) => {
-  const weekIndex = Math.floor(index / 7); // Current week index
-  const dayOfWeek = index % 7; // Current day within the week (Sunday = 0)
 
-  return (
-    <div
-      key={index}
-      style={{
-        width: "20px",
-        height: "20px",
-        background: date ? getColor(stravaCount, githubCount) : "#ebedf0", // Light gray for placeholders
-        borderRadius: "3px",
-        cursor: date ? "pointer" : "default",
-        gridColumnStart: weekIndex + 1,
-        gridRowStart: dayOfWeek + 1,
-      }}
-      onMouseEnter={(e) =>
-        date &&
-        setTooltip({
-          visible: true,
-          day: date.toDateString(),
-          stravaHours: stravaCount,
-          githubContributions: githubCount,
-          x: e.clientX,
-          y: e.clientY,
-        })
-      }
-      onMouseLeave={() => setTooltip({ visible: false })}
-    />
-  );
-})}
+          
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(52, minmax(20px, 20px))",
+      gridTemplateRows: "repeat(7, minmax(14px, 20px))",
+      gridGap: "3px",
+      justifyContent: "center",
+      margin: "0 auto",
+      position: "relative",
+      minWidth: "900px",
+      maxWidth: "1200px"
+    }}
+  >
+    {activityGraph.map(({ stravaCount, githubCount, date }, index) => {
+      const weekIndex = Math.floor(index / 7);
+      const dayOfWeek = index % 7;
+
+      return (
+        <div
+          key={index}
+          style={{
+            width: "100%",
+            height: "100%",
+            background: date ? getColor(stravaCount, githubCount) : "#ebedf0",
+            borderRadius: "4px",
+            cursor: date ? "pointer" : "default",
+            gridColumnStart: weekIndex + 1,
+            gridRowStart: dayOfWeek + 1,
+          }}
+          onMouseEnter={(e) =>
+            date &&
+            setTooltip({
+              visible: true,
+              day: date.toDateString(),
+              stravaHours: stravaCount,
+              githubContributions: githubCount,
+              x: e.clientX,
+              y: e.clientY,
+            })
+          }
+          onMouseLeave={() => setTooltip({ visible: false })}
+        />
+      );
+    })}
+  </div>
 
 
-          </div>
 
           <div
               style={{
