@@ -278,31 +278,7 @@ export default function Home() {
 
 
 
-          <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "10px",
-                fontSize: "0.9rem",
-                color: "#666",
-                width: "100%",
-              }}
-            >
-              {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map(
-                (month, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      width: "calc(100% / 12)",
-                      textAlign: "center",
-                      paddingTop: "15px",
-                    }}
-                  >
-                    {month}
-                  </span>
-                )
-              )}
-            </div>
+          
 
           {tooltip.visible && (
             <div
